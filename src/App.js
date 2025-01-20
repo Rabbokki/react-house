@@ -54,8 +54,8 @@ function App() {
           </div>
         ))}
       </div>
-      {!(showModal) == true ?
-          null : <Modal/>
+      {
+      showModal && <Modal/>
       }
     </div>
   );

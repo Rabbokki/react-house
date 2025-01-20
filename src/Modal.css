@@ -1,0 +1,24 @@
+/* 모달을 포함하는 전체 화면 오버레이 */
+.modal-overlay {
+    
+    top: 0;
+    left: 0;
+    width: 100%; /* 전체 화면 차지 */
+    height: 100%; /* 전체 화면 차지 */
+    
+    display: flex; /* 중앙 정렬을 위한 Flexbox 사용 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    
+  }
+  
+  /* 모달 자체 */
+  .modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 300px; /* 모달 너비 */
+    text-align: center;
+  }
+  
