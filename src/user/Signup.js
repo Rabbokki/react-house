@@ -1,12 +1,15 @@
 import React, { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useState } from 'react';
 import {Login} from './Login'
+import '../'
 
 
 function Signup(){
+    let navigate = useNavigate();
     const [user, setUser] = useState([]);
-
+    
     const [userId, setUserId] = useState("");
     const [pwd, setPwd] = useState("");
     const [nick, setNick] = useState("");
@@ -18,6 +21,10 @@ function Signup(){
         console.log(user);
     },[user]);
 
+    useEffect(() => {
+        console.log("LocalStorage users:", JSON.parse(localStorage.getItem("users")));
+    }, [user]);
+
     function register(e){
         e.preventDefault();
         const newUser = {
@@ -27,13 +34,18 @@ function Signup(){
             email,
             telNumber
         };
-        setUser([...user, newUser])
+        const upUsers = [...user,newUser];
+        setUser(upUsers)
+        
+        localStorage.setItem("users",JSON.stringify(upUsers));
         setUserId("");
         setPwd("");
         setNick("");
         setEmail("");
         setTelNumber("");
         alert("회원가입 완료");
+
+        navigate("/login");
         
     }
     return(

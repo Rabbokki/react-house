@@ -1,5 +1,5 @@
 import "./App.css";
-import { Fragment, useState } from "react";
+import { Fragment, useState,useEffect } from "react";
 import roomsData from "./oneroom";
 import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-dom";
 import Signup from "./user/Signup"
@@ -10,19 +10,30 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        
+        <Route path="/" element={<RedirectToSignup/>}/>
         <Route path="/signup" element={<Signup users={users} setUsers={setUsers} />} />
         
         <Route path="/login" element={<Login users = {users} />} />
         
-        <Route path="/" element={<AppContent />} />
+        <Route path="/content" element={<AppContent />} />
       </Routes>
     </BrowserRouter>
   );
 }
 
+function RedirectToSignup() {
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/signup");
+  }, [navigate]);
+
+  return null; 
+}
+
 function AppContent() {
-  let navigate = useNavigate(); // useNavigate 훅 사용
+  let navigate = useNavigate(); 
+  
   const [menu, setMenu] = useState(["Home", "Shop", "About"]);
   const [subMenu, setSubMenu] = useState(["회원가입","로그인"]);
   const [roomsInfo, setRoomsInfo] = useState(roomsData);
@@ -87,10 +98,10 @@ function AppContent() {
       </div>
 
       {/* 라우터 설정 */}
-      <Routes>
+      {/* <Routes>
         <Route path="/signup" index element = {<Signup/>}></Route>
         <Route path="/login" element = {<Login/>}></Route>
-      </Routes>
+      </Routes> */}
 
       <div className="sortMenu">
         처음처럼 <button onClick={resetRoomsInfo}>🌭</button>
