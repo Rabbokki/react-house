@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-do
 import { useParams } from "react-router-dom";
 import { useState } from 'react';
 import {Login} from './Login'
+import styles from './Signup.module.css';
 import '../'
 
 
@@ -49,7 +50,7 @@ function Signup(){
         
     }
     return(
-        <form>
+        <form className={styles.form}>
             <h2>회원가입 페이지</h2>
             <ul>
                 <li>

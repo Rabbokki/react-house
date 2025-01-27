@@ -1,9 +1,10 @@
-import "./App.css";
+import styles from "./css/App.module.css";
 import { Fragment, useState,useEffect } from "react";
 import roomsData from "./oneroom";
 import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-dom";
 import Signup from "./user/Signup"
 import Login from "./user/Login";
+import Recent from "./recent/Recent"
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -39,6 +40,11 @@ function AppContent() {
   const [roomsInfo, setRoomsInfo] = useState(roomsData);
 
   let [showModal, setShowModal] = useState(false);
+  const [recent, setRecent] = useState(false);
+
+  const recentAble = ()=>{
+    setRecent(!recent);
+  }
 
   const [bad, setBad] = useState([0, 0, 0]);
 
@@ -80,9 +86,11 @@ function AppContent() {
     setRoomsInfo(roomsData);
   }
 
+  
+
   return (
-    <div className="App">
-      <div className="menu">
+    <div className={styles.App}>
+      <div className={styles.menu}>
         {menu.map((x) => {
           return <a href="#" key={x}>{x}</a>;
         })}
@@ -103,13 +111,26 @@ function AppContent() {
         <Route path="/login" element = {<Login/>}></Route>
       </Routes> */}
 
-      <div className="sortMenu">
-        처음처럼 <button onClick={resetRoomsInfo}>🌭</button>
-        가격 <button onClick={priceSortUp}>▲</button>
-        <button onClick={priceSortDown}>▼</button>
-        물건명 <button onClick={productNameSortUp}>▲</button>
-        <button onClick={productNameSortDown}>▼</button>
-      </div>
+<div className={styles.sortMenu}>
+  <ul>
+    <li>
+      처음처럼 <button onClick={resetRoomsInfo}>🌭</button>
+    </li>
+    <li>
+      가격 <button onClick={priceSortUp}>▲</button>
+      <button onClick={priceSortDown}>▼</button>
+    </li>
+    <li>
+      물건명 <button onClick={productNameSortUp}>▲</button>
+      <button onClick={productNameSortDown}>▼</button>
+    </li>
+    <li>
+      최근 본 매물<button
+      onClick={recentAble}>🎈</button>
+      {recent && <Recent />}
+    </li>
+  </ul>
+</div>
 
       <div>
         {showModal === true ? (
@@ -121,7 +142,7 @@ function AppContent() {
         ) : null}
       </div>
 
-      <div className="content">
+      <div className={styles.content}>
         {roomsInfo.map((x, index) => {
           return (
             <div key={x.id}>
@@ -145,8 +166,8 @@ function AppContent() {
 function Modal(props) {
   let room = props.roomsInfo[props.currentIndex];
   return (
-    <div className="black-bg">
-      <div className="white-bg">
+    <div className={styles["black-bg"]}>
+      <div className={styles["white-bg"]}>
         <h4>{room.title}</h4>
         <p>{room.content}</p>
         <p>가격 : {room.price}</p>
@@ -157,7 +178,7 @@ function Modal(props) {
         >
           닫기
         </button>
-        <div className="modal-img">
+        <div className={styles["modal-img"]}>
           <img src={room.image} width="400px" alt="room" />
         </div>
       </div>
@@ -170,21 +191,41 @@ const Room = (props) => {
   let i = props.index;
   let strPrice = rooms[i].price.toLocaleString("ko-KR");
 
+  const roomData = {
+    roomImg : rooms[i].image,
+    roomTitle : rooms[i].title,
+    price : strPrice
+  }
+  function localRoom(){
+    const savedRooms = JSON.parse(localStorage.getItem('localRoom')) || [];
+    if(Array.isArray(savedRooms)){
+      savedRooms.push(roomData);
+      localStorage.setItem('localRoom',JSON.stringify(savedRooms));
+      console.log(savedRooms);
+    }else{
+      console.error('savedRooms is not an array');
+    }
+    
+    props.setCurrentIndex(i); // 현재 선택된 방의 인덱스 설정
+    props.setShowModal(true);
+  }
+
   let navigate = useNavigate(); // useNavigate 훅 사용
 
   return (
     <div>
       <h4
         onClick={() => {
-          navigate(`/detail/${rooms[i].id}`); // 클릭 시 해당 상품 상세 페이지로 이동
+          localRoom();
+          // navigate(`/detail/${rooms[i].id}`); // 클릭 시 해당 상품 상세 페이지로 이동
         }}
       >
+      <div className={styles["imgBox"]}>
+        <img src={rooms[i].image} className={styles["room-img"]}  alt="room" />
+      </div>
         {rooms[i].title}
       </h4>
       <p>{strPrice}만원</p>
-      <div className="imgBox">
-        <img src={rooms[i].image} className="room-img" alt="room" />
-      </div>
     </div>
   );
 };

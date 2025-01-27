@@ -1,0 +1,78 @@
+/* 폼 전체 스타일 */
+form {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f7f9fc, #ffffff);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+/* 제목 스타일 */
+h2 {
+    text-align: center;
+    color: #0056b3;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+/* 리스트 스타일 */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* 리스트 아이템 스타일 */
+li {
+    margin-bottom: 20px;
+}
+
+/* 라벨 스타일 */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #444;
+}
+
+/* 인풋 스타일 */
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    outline: none;
+}
+
+/* 버튼 스타일 */
+button {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    transform: scale(0.98);
+}

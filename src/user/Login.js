@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams,useNavigate } from "react-router-dom";
-import "./styles.css"
+import styles from './Login.module.css';
 import { useState,useEffect } from 'react';
 
 function Login(){
@@ -32,7 +32,7 @@ function Login(){
 
 
     return(
-        <form>
+        <form className={styles.form}>
             <h2>로그인 페이지</h2>
             <ul>
                 <li>

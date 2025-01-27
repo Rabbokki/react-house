@@ -7,6 +7,7 @@ function Modal(props){
       <h2>{props.title}</h2>
       <h4>{props.content}</h4>
       <h4>{props.price}</h4>
+      
     </div>
   )
 }
