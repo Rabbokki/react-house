@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-do
 import Signup from "./user/Signup"
 import Login from "./user/Login";
 import Recent from "./recent/Recent"
+import BookMark from "./bookMark/BookMark"
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -36,7 +37,7 @@ function AppContent() {
   let navigate = useNavigate(); 
   
   const [menu, setMenu] = useState(["Home", "Shop", "About"]);
-  const [subMenu, setSubMenu] = useState(["회원가입","로그인"]);
+  const [subMenu, setSubMenu] = useState(["로그아웃"]);
   const [roomsInfo, setRoomsInfo] = useState(roomsData);
 
   let [showModal, setShowModal] = useState(false);
@@ -94,15 +95,20 @@ function AppContent() {
         {menu.map((x) => {
           return <a href="#" key={x}>{x}</a>;
         })}
+      <div>
       {subMenu.map((x)=>{
         return <a onClick={()=>{
           if(x==="회원가입"){
             navigate("/signup");
           }else if(x==="로그인"){
             navigate("/login");
+          }else if(x==="로그아웃"){
+            navigate("/login");
           }
         }} key={x}>{x}</a>;
       })}
+
+      </div>
       </div>
 
       {/* 라우터 설정 */}
@@ -127,10 +133,36 @@ function AppContent() {
     <li>
       최근 본 매물<button
       onClick={recentAble}>🎈</button>
-      {recent && <Recent />}
+    </li>
+    <li>
+      찜 목록<button
+      onClick={recentAble}>🖤</button>
     </li>
   </ul>
 </div>
+        {recent ? (
+          <Recent/>
+        ):(
+              <div className={styles.content}>
+            {roomsInfo.map((x, index) => {
+              return (
+                <div key={x.id}>
+                  <Room
+                    roomsInfo={roomsInfo}
+                    setBad={setBad}
+                    index={index}
+                    currentIndex={currentIndex}
+                    setCurrentIndex={setCurrentIndex}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                  />
+                </div>
+              );
+            })}
+          </div>
+
+        )
+        }
 
       <div>
         {showModal === true ? (
@@ -142,23 +174,7 @@ function AppContent() {
         ) : null}
       </div>
 
-      <div className={styles.content}>
-        {roomsInfo.map((x, index) => {
-          return (
-            <div key={x.id}>
-              <Room
-                roomsInfo={roomsInfo}
-                setBad={setBad}
-                index={index}
-                currentIndex={currentIndex}
-                setCurrentIndex={setCurrentIndex}
-                showModal={showModal}
-                setShowModal={setShowModal}
-              />
-            </div>
-          );
-        })}
-      </div>
+      
     </div>
   );
 }
@@ -196,20 +212,28 @@ const Room = (props) => {
     roomTitle : rooms[i].title,
     price : strPrice
   }
-  function localRoom(){
-    const savedRooms = JSON.parse(localStorage.getItem('localRoom')) || [];
-    if(Array.isArray(savedRooms)){
-      savedRooms.push(roomData);
-      localStorage.setItem('localRoom',JSON.stringify(savedRooms));
-      console.log(savedRooms);
-    }else{
-      console.error('savedRooms is not an array');
+
+  function localRoom() {
+    let savedRooms = [];
+    try {
+      const storedData = localStorage.getItem('localRoom');
+      savedRooms = storedData ? JSON.parse(storedData) : [];
+    } catch (error) {
+      console.error( error);
+      savedRooms = []; // 오류 발생 시 빈 배열로 초기화
     }
-    
-    props.setCurrentIndex(i); // 현재 선택된 방의 인덱스 설정
+  
+    if (Array.isArray(savedRooms)) {
+      savedRooms.push(roomData);
+      localStorage.setItem('localRoom', JSON.stringify(savedRooms));
+      console.log(savedRooms);
+    } else {
+      console.error("배열 아님");
+    }
+  
+    props.setCurrentIndex(i);
     props.setShowModal(true);
   }
-
   let navigate = useNavigate(); // useNavigate 훅 사용
 
   return (
@@ -225,7 +249,9 @@ const Room = (props) => {
       </div>
         {rooms[i].title}
       </h4>
-      <p>{strPrice}만원</p>
+      <p>{strPrice}만원 
+        <p> 찜💛 </p> 
+      </p>
     </div>
   );
 };
