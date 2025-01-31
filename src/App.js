@@ -42,6 +42,12 @@ function AppContent() {
 
   let [showModal, setShowModal] = useState(false);
   const [recent, setRecent] = useState(false);
+  const [bookMark, setBookMark] = useState([]);
+  const [bookMarks, setBookMarks] = useState(false);
+
+  const stateBook = ()=>{
+    setBookMarks(!bookMarks);
+  }
 
   const recentAble = ()=>{
     setRecent(!recent);
@@ -86,6 +92,37 @@ function AppContent() {
   function resetRoomsInfo() {
     setRoomsInfo(roomsData);
   }
+
+  useEffect(()=>{
+    localStorage.setItem("bookMark", JSON.stringify(bookMark));
+  },[bookMark]);
+
+  useEffect(()=>{
+    const localBookmark = localStorage.getItem("bookMark");
+    if(localBookmark){
+      try{
+        const parsedBm = JSON.parse(localBookmark);
+        setBookMark(Array.isArray(parsedBm) ? parsedBm : [])
+      }catch(error){
+        console.log("에러",error);
+        setBookMark([]);
+      }
+      
+    }
+  },[])
+  
+
+  function bookMarkRoom(room) {
+    setBookMark((prevBookMark) => {
+      const isBookmarked = prevBookMark.some((x) => x.id === room.id);
+      if (isBookmarked) {
+        return prevBookMark.filter((x) => x.id !== room.id);
+      } else {
+        return [...prevBookMark, room];
+      }
+    });
+  }
+  
 
   
 
@@ -136,10 +173,35 @@ function AppContent() {
     </li>
     <li>
       찜 목록<button
-      onClick={recentAble}>🖤</button>
+      onClick={stateBook}>🖤</button>
+      
     </li>
   </ul>
 </div>
+        {
+          bookMarks ? (
+            <BookMark bookMark={bookMark} />
+          ): (
+            <div className={styles.content}>
+              {roomsInfo.map((x, index) => {
+              return (
+                <div key={x.id}>
+                  <Room
+                    roomsInfo={roomsInfo}
+                    setBad={setBad}
+                    index={index}
+                    currentIndex={currentIndex}
+                    setCurrentIndex={setCurrentIndex}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                    bookMarkRoom={bookMarkRoom}
+                  />
+                </div>
+              );
+            })}
+            </div>
+          )
+        }
         {recent ? (
           <Recent/>
         ):(
@@ -155,6 +217,7 @@ function AppContent() {
                     setCurrentIndex={setCurrentIndex}
                     showModal={showModal}
                     setShowModal={setShowModal}
+                    bookMarkRoom={bookMarkRoom}
                   />
                 </div>
               );
@@ -163,6 +226,10 @@ function AppContent() {
 
         )
         }
+        {
+          
+        }
+        
 
       <div>
         {showModal === true ? (
@@ -207,6 +274,10 @@ const Room = (props) => {
   let i = props.index;
   let strPrice = rooms[i].price.toLocaleString("ko-KR");
 
+  function toggleBookMark(){
+    props.bookMarkRoom(rooms[i]);
+  }
+
   const roomData = {
     roomImg : rooms[i].image,
     roomTitle : rooms[i].title,
@@ -220,7 +291,7 @@ const Room = (props) => {
       savedRooms = storedData ? JSON.parse(storedData) : [];
     } catch (error) {
       console.error( error);
-      savedRooms = []; // 오류 발생 시 빈 배열로 초기화
+      savedRooms = []; 
     }
   
     if (Array.isArray(savedRooms)) {
@@ -236,6 +307,7 @@ const Room = (props) => {
   }
   let navigate = useNavigate(); // useNavigate 훅 사용
 
+
   return (
     <div>
       <h4
@@ -249,9 +321,8 @@ const Room = (props) => {
       </div>
         {rooms[i].title}
       </h4>
-      <p>{strPrice}만원 
-        <p> 찜💛 </p> 
-      </p>
+      <p>{strPrice}만원 </p>
+        <p onClick={toggleBookMark}> 찜💛 </p> 
     </div>
   );
 };
