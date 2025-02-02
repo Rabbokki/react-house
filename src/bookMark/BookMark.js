@@ -11,7 +11,8 @@ function BookMark({ bookMark }) {
               return (
                 <li key={x.id}>
                   <img src={x.image} width="300px" alt="" />
-                  <span>{x.title}, {x.price}만원 </span>
+                  <div>{x.title}</div>
+                    <div>{x.price}만원</div>
                 </li>
               );
             })}
